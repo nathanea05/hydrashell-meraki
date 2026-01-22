@@ -7,9 +7,9 @@ from sdk.args import WildcardArg
 from sdk.exceptions import InvalidCommand
 
 # Local Imports
-from ..context import MerakiContext
-from ..models.organization import Organization
-from ..models.network import Network
+from ...context import MerakiContext
+from ...models.organization import Organization
+from ...models.network import Network
 
 
 def _use_network(session: Session, ctx: MerakiContext, parsed_command: ParsedCommand):

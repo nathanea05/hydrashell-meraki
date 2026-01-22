@@ -6,8 +6,8 @@ from sdk.models import Session, Command, ParsedCommand
 from sdk.args import WildcardArg
 
 # Local Imports
-from ..context import MerakiContext
-from ..models.organization import Organization
+from ...context import MerakiContext
+from ...models.organization import Organization
 
 
 def _use_org(session: Session, ctx: MerakiContext, parsed_command: ParsedCommand):
@@ -18,6 +18,7 @@ def _use_org(session: Session, ctx: MerakiContext, parsed_command: ParsedCommand
     org = response[0]
 
     ctx.org = Organization.from_dict(org)
+    ctx.network = None
 
 
 class UseOrg(Command):

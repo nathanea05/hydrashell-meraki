@@ -6,11 +6,16 @@ from getpass import getpass
 
 # Hydrashell Imports
 from sdk.models import Context, Session, ParsedCommand
-from sdk.exceptions import ExitError
+from sdk.exceptions import ExitHead
 
 # Local Imports
 from .models.organization import Organization
 from .models.network import Network
+
+
+def dashboard_init(api_key: str) -> meraki.DashboardAPI:
+    """Initializes the meraki dashboard"""
+    
 
 
 @dataclass
@@ -28,11 +33,6 @@ class MerakiContext(Context):
         if self.network:
             prompt = f"{prompt}\\{self.network.name}"
         return prompt
-    
-
-    def use(self, session: Session, parsed_command: ParsedCommand):
-        """Sets the active resource"""
-
             
 
     def exit(self):
@@ -42,7 +42,7 @@ class MerakiContext(Context):
         if self.org:
             self.org = None
             return
-        raise ExitError
+        raise ExitHead
         
 
     def get_dashboard(self):
