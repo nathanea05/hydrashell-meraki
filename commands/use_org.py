@@ -1,17 +1,23 @@
 # Library Imports
 
 
-# Local Imports
+# Hydrashell Imports
 from sdk.models import Session, Command, ParsedCommand
 from sdk.args import WildcardArg
 
-from plugins.meraki.context import MerakiContext
+# Local Imports
+from ..context import MerakiContext
+from ..models.organization import Organization
 
 
-def _use_org(session: Session, parsed_command: ParsedCommand):
+def _use_org(session: Session, ctx: MerakiContext, parsed_command: ParsedCommand):
     """Docstring for cmd function"""
-    target_org = parsed_command.args[0]
-    session.active_head.context.org = target_org.upper()
+    dashboard = ctx.get_dashboard()
+    response = dashboard.organizations.getOrganizations()
+
+    org = response[0]
+
+    ctx.org = Organization.from_dict(org)
 
 
 class UseOrg(Command):
@@ -23,5 +29,5 @@ class UseOrg(Command):
     required_context = {}
 
     def execute(self, session: Session, parsed_command: ParsedCommand):
-        _use_org(session, parsed_command)
+        _use_org(session, session.active_head.context, parsed_command)
         return

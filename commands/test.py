@@ -1,4 +1,4 @@
-from sdk.models import Command
+from sdk.models import Command, Session, ParsedCommand
 
 class TestCmd(Command):
     name = "test"
@@ -9,6 +9,6 @@ class TestCmd(Command):
     help = ""
 
 
-    def execute(self, session, parsed_command):
+    def execute(self, session: Session, parsed_command: ParsedCommand):
         print("Success!")
         return
