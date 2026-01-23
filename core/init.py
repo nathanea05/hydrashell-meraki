@@ -10,6 +10,7 @@ from sdk.exceptions import ExitHead
 from .context import MerakiContext
 
 
+
 def dashboard_init(session: Session, ctx: MerakiContext) -> meraki.DashboardAPI:
     """Initializes and validates the Meraki Dashboard API client"""
     old_db = ctx.dashboard
@@ -22,10 +23,11 @@ def dashboard_init(session: Session, ctx: MerakiContext) -> meraki.DashboardAPI:
         dashboard = meraki.DashboardAPI(
             api_key,
             output_log=False,
+            wait_on_rate_limit=True,
+            maximum_retries=10
         )
 
         try:
-            # This call is cheap and requires valid auth
             dashboard.organizations.getOrganizations()
 
         except APIError as e:

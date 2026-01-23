@@ -38,9 +38,9 @@ def _use_network(session: Session, ctx: MerakiContext, parsed_command: ParsedCom
     if networks:
         ctx.networks = networks
         if target == "all":
-            ctx.all_networks = True
+            ctx.is_all_networks = True
         else:
-            ctx.all_networks = False
+            ctx.is_all_networks = False
         return
     raise InvalidCommand(f"Network not found: {target}")
     
