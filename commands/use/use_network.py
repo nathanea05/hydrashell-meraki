@@ -7,7 +7,7 @@ from sdk.args import WildcardArg
 from sdk.exceptions import InvalidCommand
 
 # Local Imports
-from ...context import MerakiContext
+from ...core.context import MerakiContext
 from ...models.organization import Organization
 from ...models.network import Network
 

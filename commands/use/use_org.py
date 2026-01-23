@@ -6,7 +6,7 @@ from sdk.models import Session, Command, ParsedCommand
 from sdk.args import WildcardArg
 
 # Local Imports
-from ...context import MerakiContext
+from ...core.context import MerakiContext
 from ...models.organization import Organization
 
 

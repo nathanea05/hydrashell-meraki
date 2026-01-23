@@ -1,5 +1,5 @@
 from sdk.models import Command, Session, ParsedCommand
-from ..context import MerakiContext
+from ..core.context import MerakiContext
 from ..models.device import Device
 
 

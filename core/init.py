@@ -12,6 +12,7 @@ from .context import MerakiContext
 
 def dashboard_init(session: Session, ctx: MerakiContext) -> meraki.DashboardAPI:
     """Initializes and validates the Meraki Dashboard API client"""
+    old_db = ctx.dashboard
 
     while True:
         api_key = session.services.authentication.get_api_key()
@@ -21,7 +22,6 @@ def dashboard_init(session: Session, ctx: MerakiContext) -> meraki.DashboardAPI:
         dashboard = meraki.DashboardAPI(
             api_key,
             output_log=False,
-            suppress_logging=True,
         )
 
         try:
@@ -49,6 +49,8 @@ def dashboard_init(session: Session, ctx: MerakiContext) -> meraki.DashboardAPI:
             if session.io.confirm("Would you like to try again?"):
                 continue
             else:
+                if old_db:
+                    return
                 raise ExitHead("Failed to authenticate Meraki API")
 
         # success

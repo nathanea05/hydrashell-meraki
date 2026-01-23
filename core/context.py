@@ -9,9 +9,9 @@ from sdk.models import Context, Session, ParsedCommand
 from sdk.exceptions import ExitHead
 
 # Local Imports
-from .models.organization import Organization
-from .models.network import Network
-from .models.device import Device
+from ..models.organization import Organization
+from ..models.network import Network
+from ..models.device import Device
 
 
 def dashboard_init(api_key: str) -> meraki.DashboardAPI:
