@@ -12,13 +12,23 @@ from ...models.organization import Organization
 
 def _use_org(session: Session, ctx: MerakiContext, parsed_command: ParsedCommand):
     """Docstring for cmd function"""
-    dashboard = ctx.get_dashboard()
+    dashboard = ctx.dashboard
     response = dashboard.organizations.getOrganizations()
 
-    org = response[0]
+    target = parsed_command.args[0].strip().lower()
 
-    ctx.org = Organization.from_dict(org)
-    ctx.network = None
+    organization = None
+    for org in response:
+        if str(org.get("name")).strip().lower() == target:
+            organization = org
+            break
+
+    if organization:
+        ctx.org = Organization.from_dict(organization)
+        ctx.network = None
+    else:
+        session.io.warn(f"Organization not found: {target}")
+    return
 
 
 class UseOrg(Command):

@@ -11,6 +11,7 @@ from sdk.exceptions import ExitHead
 # Local Imports
 from .models.organization import Organization
 from .models.network import Network
+from .models.device import Device
 
 
 def dashboard_init(api_key: str) -> meraki.DashboardAPI:
@@ -23,44 +24,68 @@ class MerakiContext(Context):
 
     dashboard: Optional[meraki.DashboardAPI] = None
     org: Optional[Organization] = None
-    network: Optional[Network] = None
+    networks: Optional[list[Network]] = None
+    is_all_networks: Optional[bool] = False
+    devices: Optional[set[Device]] = None
 
 
     def get_prompt(self):
-        prompt = ""
+        parts = []
+
         if self.org:
-            prompt = self.org.name
-        if self.network:
-            prompt = f"{prompt}\\{self.network.name}"
-        return prompt
+            parts.append(self.org.name)
+
+
+        if self.networks:
+            parts.append(self.repr_networks())
+
+        if self.devices:
+            parts.append(self.repr_devices())
+
+        
+        return "\\".join(parts)
+
             
 
     def exit(self):
-        if self.network:
-            self.network = None
+        if self.devices:
+            self.devices = None
+        if self.networks:
+            self.networks = None
             return
         if self.org:
             self.org = None
             return
         raise ExitHead
-        
 
-    def get_dashboard(self):
-        if self.dashboard:
-            return self.dashboard
-        api_key = getpass("Enter your Meraki API Key: ")
-        self.dashboard = meraki.DashboardAPI(api_key, output_log=False)
-        return self.dashboard
-        
 
+    def repr_networks(self) -> str:
+        n = self.networks
+
+        if not n:
+            return None
+        
+        if len(n) == 1:
+            return n[0].name
+        
+        if len(n) > 1:
+            return f"{len(n)} Networks"
+        
     
-    def set_org(self, org: Organization):
-        """Sets the active org"""
-        self.org = org
+    def repr_devices(self) -> str:
+        d = self.devices
 
+        if not d:
+            return None
+        
+        if len(d) == 1:
+            return d[0].name
+        else:
+            return f"{len(d)} Devices"
+        
 
-    def set_net(self, network):
-        """Sets the active network"""
-        self.network = network
-
-
+    def get_network_ids(self) -> list[str]:
+        network_ids = []
+        for net in self.networks:
+            network_ids.append(net.id)
+        return(network_ids)

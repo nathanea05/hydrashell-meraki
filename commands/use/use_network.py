@@ -14,23 +14,34 @@ from ...models.network import Network
 
 def _use_network(session: Session, ctx: MerakiContext, parsed_command: ParsedCommand):
     """Docstring for cmd function"""
-    dashboard = ctx.get_dashboard()
+    kwargs = parsed_command.kwargs
+
+    dashboard = ctx.dashboard
     response = dashboard.organizations.getOrganizationNetworks(organizationId=ctx.org.id)
 
     target = parsed_command.args[0].strip().lower()
 
-    network = None
+    networks = []
 
     for net in response:
-        name = str(net.get("name", "")).strip().lower()
-        if name == target:
-            network = net
-            break
+        network = Network.from_dict(net)
+        
+        if target == "all":
+            networks.append(network)
+            continue
 
-    if network:
-        ctx.network = Network.from_dict(network)
+        else:
+            if network.name.strip().lower() == target:
+                networks.append(network)
+                break
+
+    if networks:
+        ctx.networks = networks
+        if target == "all":
+            ctx.all_networks = True
+        else:
+            ctx.all_networks = False
         return
-    ctx.network = None
     raise InvalidCommand(f"Network not found: {target}")
     
 

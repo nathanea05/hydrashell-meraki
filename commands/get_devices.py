@@ -4,9 +4,17 @@ from ..models.device import Device
 
 
 def _get_devices(session: Session, ctx: MerakiContext, parsed_command: ParsedCommand):
-    db = ctx.get_dashboard()
+    db = ctx.dashboard
     devices = []
-    response = db.organizations.getOrganizationDevices(ctx.org.id)
+
+    if ctx.networks and not ctx.is_all_networks:
+        network_ids = ctx.get_network_ids()
+        response = db.organizations.getOrganizationDevices(ctx.org.id, networkIds=network_ids)
+
+    else:
+        response = db.organizations.getOrganizationDevices(ctx.org.id)
+
+
     for dev in response:
         device = Device.from_dict(dev)
         devices.append(device)
