@@ -37,17 +37,11 @@ def _use_device(session: Session, ctx: MerakiContext, parsed_command: ParsedComm
     
     if devices:
         if product_type == "switch":
-            ctx.switches = devices
-            ctx.access_points = None
-            ctx.firewalls = None
+            ctx.activate("switch", devices)
         if product_type == "wireless":
-            ctx.access_points = devices
-            ctx.switches = None
-            ctx.firewalls = None
+            ctx.activate("wireless", devices)
         if product_type == "appliance":
-            ctx.firewalls = devices
-            ctx.switches = None
-            ctx.access_points = None
+            ctx.activate("appliance", devices)
         return
     
     raise InvalidCommand(f"Device not found: {target}")
@@ -60,7 +54,7 @@ class UseSwitch(Command):
     description = "Sets the active switch in the Meraki Context"
     args = {WildcardArg}
     kwargs = {}
-    required_context = {"org", "networks"}
+    required_context = {"org", "network"}
 
     def execute(self, session: Session, parsed_command: ParsedCommand):
         _use_device(session, session.active_head.context, parsed_command, product_type="switch")
@@ -73,7 +67,7 @@ class UseAp(Command):
     description = "Sets the active Access Point in the Meraki Context"
     args = {WildcardArg}
     kwargs = {}
-    required_context = {"org", "networks"}
+    required_context = {"org", "network"}
 
     def execute(self, session: Session, parsed_command: ParsedCommand):
         _use_device(session, session.active_head.context, parsed_command, product_type="wireless")
@@ -86,7 +80,7 @@ class UseFirewall(Command):
     description = "Sets the active firewall in the Meraki Context"
     args = {WildcardArg}
     kwargs = {}
-    required_context = {"org", "networks"}
+    required_context = {"org", "network"}
 
     def execute(self, session: Session, parsed_command: ParsedCommand):
         _use_device(session, session.active_head.context, parsed_command, product_type="appliance")

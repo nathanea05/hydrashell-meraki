@@ -24,7 +24,8 @@ def dashboard_init(session: Session, ctx: MerakiContext) -> meraki.DashboardAPI:
             api_key,
             output_log=False,
             wait_on_rate_limit=True,
-            maximum_retries=10
+            maximum_retries=10,
+            retry_4xx_error=False
         )
 
         try:

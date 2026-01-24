@@ -58,9 +58,7 @@ def _use_vlan(session: Session, ctx: MerakiContext, parsed_command: ParsedComman
                     continue
 
     if vlans:
-        ctx.clear_devices()
-        ctx.ssids = None
-        ctx.vlans = vlans
+        ctx.activate("vlan", vlans)
     else:
         session.io.warn(f"Vlan not found: {target}")
     return
@@ -83,7 +81,7 @@ class UseOrg(Command):
     description = "Sets the active Organization in the Meraki Context"
     args = {WildcardArg}
     kwargs = {NameKwarg, IdKwarg}
-    required_context = {"org" "networks"}
+    required_context = {"org", "network"}
 
     def execute(self, session: Session, parsed_command: ParsedCommand):
         _use_vlan(session, session.active_head.context, parsed_command)

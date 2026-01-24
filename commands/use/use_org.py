@@ -20,12 +20,11 @@ def _use_org(session: Session, ctx: MerakiContext, parsed_command: ParsedCommand
     organization = None
     for org in response:
         if str(org.get("name")).strip().lower() == target:
-            organization = org
+            organization = Organization.from_dict(org)
             break
 
     if organization:
-        ctx.org = Organization.from_dict(organization)
-        ctx.network = None
+        ctx.activate("org", organization)
     else:
         session.io.warn(f"Organization not found: {target}")
     return

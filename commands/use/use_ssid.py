@@ -56,9 +56,7 @@ def _use_ssid(session: Session, ctx: MerakiContext, parsed_command: ParsedComman
 
 
     if ssids:
-        ctx.ssids = ssids
-        ctx.clear_devices()
-        ctx.vlans = None
+        ctx.activate("ssid", ssids)
         return
     session.io.warn("Ssid not found")
 
@@ -72,7 +70,7 @@ class UseSsid(Command):
     description = "Sets the active SSID in the Meraki Context"
     args = {WildcardArg}
     kwargs = None
-    required_context = {"org", "networks"}
+    required_context = {"org", "network"}
 
     def execute(self, session: Session, parsed_command: ParsedCommand):
         _use_ssid(session, session.active_head.context, parsed_command)

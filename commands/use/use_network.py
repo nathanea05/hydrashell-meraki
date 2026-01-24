@@ -36,7 +36,7 @@ def _use_network(session: Session, ctx: MerakiContext, parsed_command: ParsedCom
                 break
 
     if networks:
-        ctx.networks = networks
+        ctx.activate("network", networks)
         if target == "all":
             ctx.is_all_networks = True
         else:
